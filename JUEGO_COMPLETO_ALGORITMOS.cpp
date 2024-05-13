@@ -206,7 +206,7 @@ clock_t end = clock(); // Guardar el tiempo de fin
 
 double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
 
-if (elapsed_secs > tiempoMaximo)
+if (elapsed_secs > 20)
 {
     
     puntuacionJugador -= 1;
