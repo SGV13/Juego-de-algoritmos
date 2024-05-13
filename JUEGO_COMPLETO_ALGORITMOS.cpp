@@ -171,18 +171,30 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
 {
     string respuesta;
     cout << "Ingresa tu respuesta o escribe 'terminar' para finalizar el juego: ";
-    clock_t start = clock(); // Tiempo de inicio
+
+    // Iniciar el cronómetro
+    clock_t start = clock();
+
+    // Leer la respuesta del jugador
     cin >> respuesta;
-    clock_t end = clock(); // Tiempo de fin
+
+    
+    clock_t end = clock();
 
     // Calcular el tiempo transcurrido en segundos
     double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
 
-    const int tiempoMaximo = 10; // Tiempo máximo permitido en segundos
+    // Determinar el tiempo máximo permi
+    int tiempoMaximo = 15;
+    if (respuesta == "S" || respuesta == "s")
+    {
+        Sleep(1000);
+        tiempoMaximo = 20; 
+    }
 
     if (elapsed_secs > tiempoMaximo)
     {
-        // El jugador se ha demorado más de lo permitido, penalizar
+        
         puntuacionJugador -= 1;
         cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
         return false; // El jugador se ha demorado, no se evalúa la respuesta
@@ -214,12 +226,11 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
     }
 }
 
-
 // funcion para el sistema de compra de pistas
 void comprarPista(int &puntuacionJugador, const string &nombreJugador, const string &pista)
 {
     char respuesta;
-    Sleep(500);
+    Sleep(1000);
     cout << endl;
     cout << nombreJugador << ", quieres comprar una pista por 1 punto? (S/N): ";
     cin >> respuesta;
@@ -231,13 +242,13 @@ void comprarPista(int &puntuacionJugador, const string &nombreJugador, const str
             cout << endl;
             cout << "Pista: " << pista << endl;
             puntuacionJugador -= 1;
-            Sleep(500);
+            Sleep(1000);
             cout << endl;
             cout << "Has comprado una pista por 1 punto. Tu puntuacion actual es: " << puntuacionJugador << endl;
         }
         else
         {
-            Sleep(500);
+            Sleep(1000);
             cout << endl;
             cout << "lo siento, necesitas 1 punto o mas para comprar una pista." << endl;
         }
@@ -295,15 +306,22 @@ int obtenerIndiceAleatorioNoRepetido(int maximo, vector<int> &indicesUtilizados)
 }
 
 // Función para el cronómetro
-void cronometro()
+void cronometro(const string &nombreJugador, const string &nombreCriatura)
 {
-    cout << "Tienes 10 segundos para responder..." << endl;
-    for (int i = 10; i > 0; --i)
+    cout << "Tienes 15 segundos para responder o copiar 'terminar' para finalizar..." << endl;
+    for (int i = 15; i > 0; --i)
     {
         cout << i << " ";
         Sleep(1000); // Espera 1 segundo
     }
     cout << endl;
+
+    if (nombreCriatura != "")
+    {
+        Sleep(1000);
+        cout << "La criatura era: " << nombreCriatura << endl;
+        Sleep(1000);
+    }
 }
 
 //PRINCIPAL
@@ -331,10 +349,11 @@ void juego1()
     cout << "                        ##   REGLA 2: Cuando desees la pista, deberas indicar la respuesta con una S o N, siendo S aceptarla y N rechazar ##" << endl;
     cout << "                        ##   REGLA 3: No puedes buscar la respuesta o pedirsela a alguien mas                                             ##" << endl;
     cout << "                        ##   REGLA 4: Deberas respetar el turno, el juego indicara a quien le tocara responder                            ##" << endl;
+    cout << "                        ##   REGLA 5: Si respondes tarde te contara como una respuesta mala aunque este buena, solo por demorarse          ##" << endl;
     cout << "                        ##                                                                                                                ##" << endl;
     cout << "                        ####################################################################################################################   " << endl
          << endl;
-    Sleep(5000);
+    Sleep(7000);
     cout << endl;
     cout << "                        COMO FUNCIONA EL JUEGO                                                                                       " << endl
          << endl;
@@ -346,9 +365,10 @@ void juego1()
     cout << "                        ##   4: Cualquier jugador que escriba terminar en su respuesta acabara el juego inmediatamente                    ##" << endl;
     cout << "                        ##   5: Cuando falles una respuesta perderas 1 punto                                                              ##" << endl;
     cout << "                        ##   6: El primero en llegar a 10 puntos gana, se mostrara la puntuacion de cada uno y el ganador                 ##" << endl;
+    cout << "                        ##   7: Aparecera el cronometro pero no lo que estas escribiendo, asi que no te equivoque campeon                 ##" << endl;
     cout << "                        ##                                                                                                                ##" << endl;
     cout << "                        ####################################################################################################################   " << endl;
-    Sleep(5000);
+    Sleep(7000);
 
     cout << endl
          << endl
@@ -365,7 +385,7 @@ void juego1()
     vector<int> indicesUtilizados;
 
     // BUCLE PRINCIPAL DEL JUEGO, Le agregue al bucle las funciones del cronometro
-    bool jugarDeNuevo = true;
+     bool jugarDeNuevo = true;
     while (jugarDeNuevo)
     {
         // Puntuaciones iniciales de los jugadores
@@ -390,7 +410,7 @@ void juego1()
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
 
             // Llamar función de cronómetro
-            cronometro();
+            cronometro(name1, nombres[indiceAleatorio]);
 
             // Llamar función de adivinanza
             tolower(name1);
@@ -413,7 +433,7 @@ void juego1()
             cout << "TURNO DE " << name2 << endl;
             cout << endl;
             indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
-            Sleep(500);
+            Sleep(1000);
             cout << "que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
 
             // Comprar pista Jugador 2
@@ -421,7 +441,7 @@ void juego1()
             comprarPista(puntuacionJugador2, name2, pistas[indiceAleatorio]);
 
             // Llamar función de cronómetro
-            cronometro();
+            cronometro(name2, nombres[indiceAleatorio]);
 
             // llamar función de adivinanza
             tolower(name2);
