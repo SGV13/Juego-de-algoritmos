@@ -6,7 +6,7 @@
 #include <cstdlib> // Para rand() y srand()
 #include <ctime>   // Para time()
 #include <locale>  //para setlocale
-#include <cctype>  //para toupper y tolower
+#include <cctype>  //para toupper y tolower perra hp de samuel le encanta el pipi 
 #include <windows.h>
 using namespace std;
 
