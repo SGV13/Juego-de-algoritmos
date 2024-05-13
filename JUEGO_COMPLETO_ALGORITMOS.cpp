@@ -166,12 +166,27 @@ void inicializarCriaturas(vector<string> &descripciones, vector<string> &nombres
         };
 }
 
-// Función para que un jugador adivine la criatura
+// Función para que un jugador adivine la criatura, le agregue la funcion de temporizador 
 bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const string &nombreCriatura, bool &jugarDeNuevo)
 {
     string respuesta;
     cout << "Ingresa tu respuesta o escribe 'terminar' para finalizar el juego: ";
+    clock_t start = clock(); // Tiempo de inicio
     cin >> respuesta;
+    clock_t end = clock(); // Tiempo de fin
+
+    // Calcular el tiempo transcurrido en segundos
+    double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+
+    const int tiempoMaximo = 10; // Tiempo máximo permitido en segundos
+
+    if (elapsed_secs > tiempoMaximo)
+    {
+        // El jugador se ha demorado más de lo permitido, penalizar
+        puntuacionJugador -= 1;
+        cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
+        return false; // El jugador se ha demorado, no se evalúa la respuesta
+    }
 
     if (respuesta == nombreCriatura)
     {
@@ -198,6 +213,7 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
         return false;
     }
 }
+
 
 // funcion para el sistema de compra de pistas
 void comprarPista(int &puntuacionJugador, const string &nombreJugador, const string &pista)
@@ -277,6 +293,19 @@ int obtenerIndiceAleatorioNoRepetido(int maximo, vector<int> &indicesUtilizados)
     indicesUtilizados.push_back(indiceAleatorio);
     return indiceAleatorio;
 }
+
+// Función para el cronómetro
+void cronometro()
+{
+    cout << "Tienes 10 segundos para responder..." << endl;
+    for (int i = 10; i > 0; --i)
+    {
+        cout << i << " ";
+        Sleep(1000); // Espera 1 segundo
+    }
+    cout << endl;
+}
+
 //PRINCIPAL
 void juego1()
 {
@@ -335,7 +364,7 @@ void juego1()
     vector<string> pistas;
     vector<int> indicesUtilizados;
 
-    // BUCLE PRINCIPAL DEL JUEGO
+    // BUCLE PRINCIPAL DEL JUEGO, Le agregue al bucle las funciones del cronometro
     bool jugarDeNuevo = true;
     while (jugarDeNuevo)
     {
@@ -360,7 +389,10 @@ void juego1()
             tolower(name1);
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
 
-            // Llamar funcion de adivinanza
+            // Llamar función de cronómetro
+            cronometro();
+
+            // Llamar función de adivinanza
             tolower(name1);
             bool respuestaCorrectaJugador1 = adivinarCriatura(puntuacionJugador1, name1, nombres[indiceAleatorio], jugarDeNuevo);
             if (!jugarDeNuevo)
@@ -388,7 +420,10 @@ void juego1()
             tolower(name2);
             comprarPista(puntuacionJugador2, name2, pistas[indiceAleatorio]);
 
-            // llamar funcion de adivinanza
+            // Llamar función de cronómetro
+            cronometro();
+
+            // llamar función de adivinanza
             tolower(name2);
             bool respuestaCorrectaJugador2 = adivinarCriatura(puntuacionJugador2, name2, nombres[indiceAleatorio], jugarDeNuevo);
             if (!jugarDeNuevo)
@@ -404,7 +439,7 @@ void juego1()
         }
 
         // Mostrar puntos totales de cada jugador
-        cout<< endl;
+        cout << endl;
         Sleep(1000);
         cout << "Puntos totales de " << name1 << ": " << puntuacionJugador1 << endl;
         cout << endl;
