@@ -349,7 +349,7 @@ void juego1()
     cout << "                        ##   REGLA 2: Cuando desees la pista, deberas indicar la respuesta con una S o N, siendo S aceptarla y N rechazar ##" << endl;
     cout << "                        ##   REGLA 3: No puedes buscar la respuesta o pedirsela a alguien mas                                             ##" << endl;
     cout << "                        ##   REGLA 4: Deberas respetar el turno, el juego indicara a quien le tocara responder                            ##" << endl;
-    cout << "                        ##   REGLA 5: Si respondes tarde te contara como una respuesta mala aunque este buena, solo por demorarse          ##" << endl;
+    cout << "                        ##   REGLA 5: Si respondes tarde te contara como una respuesta mala aunque este buena, solo por demorarse         ##" << endl;
     cout << "                        ##                                                                                                                ##" << endl;
     cout << "                        ####################################################################################################################   " << endl
          << endl;
@@ -403,7 +403,7 @@ void juego1()
             cout << endl;
             int indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
             Sleep(500);
-            cout << "Que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
+            cout << "Que criatura crees que es ---> ?  " << descripciones[indiceAleatorio] << endl;
 
             // Comprar pista Jugador 1
             tolower(name1);
