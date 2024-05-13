@@ -197,6 +197,22 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
         cout << "Puntuacion actual de " << nombreJugador << ": " << puntuacionJugador << " puntos" << endl;
         return false;
     }
+clock_t start = clock(); // Guardar el tiempo de inicio
+string respuesta;
+cout << "Ingresa tu respuesta o escribe 'terminar' para finalizar el juego: ";
+cin >> respuesta;
+clock_t end = clock(); // Guardar el tiempo de fin
+
+
+double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+
+if (elapsed_secs > tiempoMaximo)
+{
+    
+    puntuacionJugador -= 1;
+    cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
+}
+
 }
 
 // funcion para el sistema de compra de pistas
