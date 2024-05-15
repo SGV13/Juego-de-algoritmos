@@ -323,6 +323,13 @@ void cronometro(const string &nombreJugador, const string &nombreCriatura)
         Sleep(1000);
     }
 }
+void mostrarBarraProgreso(int progreso) {
+    cout << "Progreso: ";
+    for (int i = 0; i < progreso / 10; ++i) {
+        cout << "|";
+    }
+    cout << " " << progreso << "%" << endl;
+}
 
 //PRINCIPAL
 void juego1()
@@ -490,6 +497,13 @@ void juego1()
         char opcionJugarDeNuevo;
         cin >> opcionJugarDeNuevo;
         jugarDeNuevo = (opcionJugarDeNuevo == 'S' || opcionJugarDeNuevo == 's');
+        int progreso = 0;
+
+        while (progreso <= 100) {
+        mostrarBarraProgreso(progreso);
+        progreso += 10;
+        Sleep(500); 
+        }
     }
     Sleep(1000);
     cout << "                                                       Gracias por jugar" << endl;
