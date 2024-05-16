@@ -8,6 +8,7 @@
 #include <locale>  //para setlocale
 #include <cctype>  //para toupper y tolower
 #include <windows.h>
+#include <fstream>
 using namespace std;
 
  
@@ -57,6 +58,29 @@ void mostrarReglasYInstrucciones() {
     cout << "Aceptas las condiciones?...       presione----[intro]---Si aceptas jejeje"<<endl;
     cin.get(); // Esperar a que el usuario presione Enter
     system("cls"); // Limpiar la pantalla después de que el usuario presione Enter
+}
+
+// Función para guardar las pistas y descripciones en un archivo de texto
+void guardarCriaturasEnArchivo(const vector<string> &descripciones, const vector<string> &nombres, const vector<string> &pistas)
+{
+    ofstream archivo("criaturas.txt");
+
+    if (archivo.is_open())
+    {
+        for (size_t i = 0; i < descripciones.size(); ++i)
+        {
+            archivo << "Descripción: " << descripciones[i] << endl;
+            archivo << "Nombre: " << nombres[i] << endl;
+            archivo << "Pista: " << pistas[i] << endl << endl;
+        }
+
+        archivo.close();
+        cout << "Las criaturas se han guardado en el archivo 'criaturas.txt'" << endl;
+    }
+    else
+    {
+        cout << "No se pudo abrir el archivo para guardar las criaturas" << endl;
+    }
 }
 
 // Función para inicializar los vectores de descripciones, nombres y pistas de criaturas
