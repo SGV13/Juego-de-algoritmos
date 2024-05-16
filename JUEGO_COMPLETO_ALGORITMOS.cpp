@@ -11,7 +11,30 @@
 #include <fstream>
 using namespace std;
 
- 
+
+//Creacion para guardar datos y que pueda recibir de dos maneras
+struct Jugador {
+    string nombre;
+    int puntuacion;
+
+    Jugador(string nombre, int puntuacion) : nombre(nombre), puntuacion(puntuacion) {}
+};
+
+// Función para guardar las puntuaciones de los jugadores en un archivo
+void guardarPuntuaciones(const vector<Jugador> &jugadores) {
+    ofstream archivo("registro_puntuaciones.txt");
+    
+    if (archivo.is_open()) {
+        for (const Jugador &jugador : jugadores) {
+            archivo << "Nombre: " << jugador.nombre << ", Puntuación: " << jugador.puntuacion << endl;
+        }
+        archivo.close();
+        cout << "Registro de puntuaciones guardado en 'registro_puntuaciones.txt'" << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar el registro de puntuaciones" << endl;
+    }
+}
+
 // Función para obtener un número aleatorio entre min y max
 int randomNumber(int min, int max)
 
@@ -532,6 +555,13 @@ void juego1()
         progreso += 10;
         Sleep(500); 
         }
+     // Después de determinar al ganador del juego...
+    vector<Jugador> jugadores;
+    jugadores.push_back({name1, puntuacionJugador1});
+    jugadores.push_back({name2, puntuacionJugador2});
+
+    // Llamar a la función para guardar las puntuaciones
+    guardarPuntuaciones(jugadores);
     }
     Sleep(1000);
     cout << "                                                       Gracias por jugar" << endl;
