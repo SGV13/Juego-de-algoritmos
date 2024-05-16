@@ -382,6 +382,17 @@ void mostrarBarraProgreso(int progreso) {
 //PRINCIPAL
 void juego1()
 {   
+    // Inicializar el generador de números aleatorios
+    srand(time(0));
+
+    // Vectores de descripciones, nombres y pistas de criaturas
+    vector<string> descripciones;
+    vector<string> nombres;
+    vector<string> pistas;
+
+    // Inicializar criaturas y guardarlas en un archivo
+    inicializarCriaturas(descripciones, nombres, pistas);
+    
     string name1;
     cout << "Bienvenido jugador(a) #1, por favor ingresa tu nombre: ";
     getline(cin, name1);
