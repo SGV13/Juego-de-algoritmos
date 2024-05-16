@@ -23,7 +23,7 @@ void mostrarReglasYInstrucciones() {
     cout<<endl;
     cout<<endl;
     Sleep(1000);
-    cout << "                                       Bienvenidos al juego de adivinar criaturas mitológicas" << endl << endl;
+    cout << "                                       Bienvenidos al juego de adivinar criaturas mitologicas" << endl << endl;
     cout<<endl;
     Sleep(1500);
     cout << "                        Primero las reglas... ¿no?" << endl << endl;
@@ -198,13 +198,12 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
     // Leer la respuesta del jugador
     cin >> respuesta;
 
-    
     clock_t end = clock();
 
     // Calcular el tiempo transcurrido en segundos
     double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
 
-    // Determinar el tiempo máximo permi
+    // Determinar el tiempo máximo permitido
     int tiempoMaximo = 15;
     if (respuesta == "S" || respuesta == "s")
     {
@@ -215,7 +214,9 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
     if (elapsed_secs > tiempoMaximo)
     {
         
-        puntuacionJugador -= 1;
+        if (puntuacionJugador > 0) {
+            puntuacionJugador -= 1;
+        }
         cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
         return false; // El jugador se ha demorado, no se evalúa la respuesta
     }
@@ -237,9 +238,11 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
     }
     else
     {
+        if (puntuacionJugador > 0) {
+            puntuacionJugador -= 1;
+        }
         Sleep(500);
         cout << "Respuesta incorrecta. Perdiste 1 punto." << endl;
-        puntuacionJugador -= 1;
         Sleep(500);
         cout << "Puntuacion actual de " << nombreJugador << ": " << puntuacionJugador << " puntos" << endl;
         return false;
