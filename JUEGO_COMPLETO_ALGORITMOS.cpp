@@ -208,6 +208,7 @@ void inicializarCriaturas(vector<string> &descripciones, vector<string> &nombres
             "Responsables de llevar las almas de los fallecidos hasta el más alla ",                                            //  36
 
         };
+ guardarCriaturasEnArchivo(descripciones, nombres, pistas);
 }
 
 // Función para que un jugador adivine la criatura, le agregue la funcion de temporizador 
