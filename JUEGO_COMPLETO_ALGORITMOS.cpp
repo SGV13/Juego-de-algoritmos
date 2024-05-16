@@ -9,10 +9,10 @@
 #include <cctype>  //para toupper y tolower
 #include <windows.h>
 #include <fstream>
+#include <algorithm>
 using namespace std;
 
 
-//Creacion para guardar datos y que pueda recibir de dos maneras
 struct Jugador {
     string nombre;
     int puntuacion;
@@ -231,7 +231,9 @@ void inicializarCriaturas(vector<string> &descripciones, vector<string> &nombres
             "Responsables de llevar las almas de los fallecidos hasta el más alla ",                                            //  36
 
         };
- guardarCriaturasEnArchivo(descripciones, nombres, pistas);
+
+    // Guardar las criaturas en un archivo de texto
+    guardarCriaturasEnArchivo(descripciones, nombres, pistas);
 }
 
 // Función para que un jugador adivine la criatura, le agregue la funcion de temporizador 
@@ -334,6 +336,7 @@ void actualizarPuntuaciones(int &puntuacionJugador, bool respuestaCorrecta)
         puntuacionJugador += 2;
     }
 }
+
 // minuscula
 void tolower(string &texto)
 {
@@ -342,6 +345,7 @@ void tolower(string &texto)
         c = tolower(c);
     }
 }
+
 // mayuscula
 void toupper(string &texto)
 {
@@ -376,7 +380,7 @@ int obtenerIndiceAleatorioNoRepetido(int maximo, vector<int> &indicesUtilizados)
     return indiceAleatorio;
 }
 
-// Función para el cronómetro
+//Creacion del cronometro
 void cronometro(const string &nombreJugador, const string &nombreCriatura)
 {
     cout << "Tienes 15 segundos para responder o copiar 'terminar' para finalizar..." << endl;
@@ -394,6 +398,8 @@ void cronometro(const string &nombreJugador, const string &nombreCriatura)
         Sleep(1000);
     }
 }
+
+//bobada 1
 void mostrarBarraProgreso(int progreso) {
     cout << "Progreso: ";
     for (int i = 0; i < progreso / 10; ++i) {
@@ -405,17 +411,6 @@ void mostrarBarraProgreso(int progreso) {
 //PRINCIPAL
 void juego1()
 {   
-    // Inicializar el generador de números aleatorios
-    srand(time(0));
-
-    // Vectores de descripciones, nombres y pistas de criaturas
-    vector<string> descripciones;
-    vector<string> nombres;
-    vector<string> pistas;
-
-    // Inicializar criaturas y guardarlas en un archivo
-    inicializarCriaturas(descripciones, nombres, pistas);
-    
     string name1;
     cout << "Bienvenido jugador(a) #1, por favor ingresa tu nombre: ";
     getline(cin, name1);
@@ -544,6 +539,13 @@ void juego1()
         }
         Sleep(1000);
 
+        vector<Jugador> jugadores;
+        jugadores.push_back({name1, puntuacionJugador1});
+        jugadores.push_back({name2, puntuacionJugador2});
+
+        guardarPuntuaciones(jugadores);
+    
+
         cout << "Deseas jugar de nuevo? (S/N): ";
         char opcionJugarDeNuevo;
         cin >> opcionJugarDeNuevo;
@@ -555,19 +557,29 @@ void juego1()
         progreso += 10;
         Sleep(500); 
         }
-     // Después de determinar al ganador del juego...
-    vector<Jugador> jugadores;
-    jugadores.push_back({name1, puntuacionJugador1});
-    jugadores.push_back({name2, puntuacionJugador2});
-
-    // Llamar a la función para guardar las puntuaciones
-    guardarPuntuaciones(jugadores);
+    
+    // Después de determinar al ganador del juego...
+  
+    
     }
     Sleep(1000);
     cout << "                                                       Gracias por jugar" << endl;
-}
+} 
+
 
 int main() {
+    
+    // Inicializar el generador de números aleatorios
+    srand(time(0));
+
+    // Vectores de descripciones, nombres y pistas de criaturas
+    vector<string> descripciones;
+    vector<string> nombres;
+    vector<string> pistas;
+
+    // Inicializar criaturas y guardarlas en un archivo
+    inicializarCriaturas(descripciones, nombres, pistas);
+
     int juego;
 
     while (true) {
