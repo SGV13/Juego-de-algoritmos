@@ -12,13 +12,103 @@
 #include <algorithm>
 using namespace std;
 
-
 struct Jugador {
     string nombre;
     int puntuacion;
 
+    Jugador() : nombre(""), puntuacion(0) {}
+
     Jugador(string nombre, int puntuacion) : nombre(nombre), puntuacion(puntuacion) {}
 };
+
+// Función para obtener el valor del carácter en la posición especificadaxxxxxx
+int obtenerValorCaracter(string str, int pos) {
+    if (pos < str.length()) {
+        return str[pos];
+    } else {
+        return 0;
+    }
+}
+
+// Función para ordenar los jugadores usando RadixSortxxxxx
+void RadixSort(vector<Jugador> &jugadores) {
+    const int SIZE = 256; // Tamaño del rango de caracteres ASCII
+
+    auto contarFrecuencia = [&](int pos) {
+        vector<int> contador(SIZE, 0);
+        for (const Jugador &jugador : jugadores) {
+            int valor = obtenerValorCaracter(jugador.nombre, pos);
+            contador[valor]++;
+        }
+        return contador;
+    };
+
+    auto sumaAcumulativa = [&](const vector<int> &contador) {
+        vector<int> acumulativa(SIZE, 0);
+        acumulativa[0] = contador[0];
+        for (int i = 1; i < SIZE; i++) {
+            acumulativa[i] = acumulativa[i - 1] + contador[i];
+        }
+        return acumulativa;
+    };
+
+    auto ordenar = [&](int pos) {
+        vector<Jugador> resultado(jugadores.size());
+        vector<int> contador = contarFrecuencia(pos);
+        vector<int> acumulativa = sumaAcumulativa(contador);
+
+        for (int i = jugadores.size() - 1; i >= 0; i--) {
+            int valor = obtenerValorCaracter(jugadores[i].nombre, pos);
+            int index = acumulativa[valor] - 1;
+            resultado[index] = jugadores[i];
+            acumulativa[valor]--;
+        }
+
+        jugadores = resultado;
+    };
+
+    size_t maxLen = 0;
+    for (const Jugador &jugador : jugadores) {
+        if (jugador.nombre.length() > maxLen) {
+            maxLen = jugador.nombre.length();
+        }
+    }
+
+    for (int pos = maxLen - 1; pos >= 0; pos--) {
+        ordenar(pos);
+    }
+}
+
+// Función para leer y guardar jugadores en el archivo "clasificatoria.txt" xxxx
+void guardarClasificatoria(vector<Jugador> &jugadores) {
+    vector<Jugador> todosJugadores = jugadores;
+    ifstream archivoExistente("clasificatoria.txt");
+
+    if (archivoExistente.is_open()) {
+        string nombre;
+        int puntuacion;
+
+        while (archivoExistente >> nombre >> puntuacion) {
+            todosJugadores.emplace_back(nombre, puntuacion);
+        }
+
+        archivoExistente.close();
+    }
+
+    RadixSort(todosJugadores);
+
+    ofstream archivo("clasificatoria.txt");
+
+    if (archivo.is_open()) {
+        for (const Jugador &jugador : todosJugadores) {
+            archivo << "Nombre: " << jugador.nombre << ", Puntuación: " << jugador.puntuacion << endl;
+        }
+        archivo.close();
+        cout << "Clasificacion guardada en 'clasificatoria.txt'" << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar la clasificación" << endl;
+    }
+}
 
 // Función para guardar las puntuaciones de los jugadores en un archivo
 void guardarPuntuaciones(const vector<Jugador> &jugadores) {
@@ -544,7 +634,7 @@ void juego1()
         jugadores.push_back({name2, puntuacionJugador2});
 
         guardarPuntuaciones(jugadores);
-    
+        guardarClasificatoria(jugadores);
 
         cout << "Deseas jugar de nuevo? (S/N): ";
         char opcionJugarDeNuevo;
@@ -557,17 +647,26 @@ void juego1()
         progreso += 10;
         Sleep(500); 
         }
-    
-    // Después de determinar al ganador del juego...
-  
-    
+        
+        cout << "Jugadores antes de ordenar:" << endl;
+        for (const Jugador &jugador : jugadores) {
+        cout << "Nombre: " << jugador.nombre << ", Puntuacion: " << jugador.puntuacion << endl;
+    }
+
+        RadixSort(jugadores);
+
+        cout << "\nJugadores despues de ordenar:" << endl;
+        for (const Jugador &jugador : jugadores) {
+        cout << "Nombre: " << jugador.nombre << ", Puntuacion: " << jugador.puntuacion << endl;
+        }
+
     }
     Sleep(1000);
     cout << "                                                       Gracias por jugar" << endl;
 } 
 
 
-int main() {
+int main(){
     
     // Inicializar el generador de números aleatorios
     srand(time(0));
@@ -580,6 +679,7 @@ int main() {
     // Inicializar criaturas y guardarlas en un archivo
     inicializarCriaturas(descripciones, nombres, pistas);
 
+    
     int juego;
 
     while (true) {
@@ -603,4 +703,3 @@ int main() {
 
     return 0;
 }
-
