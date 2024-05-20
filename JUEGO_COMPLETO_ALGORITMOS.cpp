@@ -330,7 +330,7 @@ void inicializarCriaturas(vector<string> &descripciones, vector<string> &nombres
 bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const string &nombreCriatura, bool &jugarDeNuevo)
 {
     string respuesta;
-    cout << "Tu respuesta fue: ";
+    cout << "Tu respuesta es...: ";
 
     // Iniciar el cronómetro
     clock_t start = clock();
@@ -340,6 +340,8 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
 
     clock_t end = clock();
 
+
+
     // Calcular el tiempo transcurrido en segundos
     double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
 
@@ -348,16 +350,15 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
     if (respuesta == "S" || respuesta == "s")
     {
         Sleep(1000);
-        tiempoMaximo = 20; 
+        tiempoMaximo = 15; 
     }
 
-    if (elapsed_secs > tiempoMaximo)
-    {
-        
+    if (elapsed_secs > tiempoMaximo) {
         if (puntuacionJugador > 0) {
             puntuacionJugador -= 1;
         }
         cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
+        cout << "La criatura era: " << nombreCriatura << endl;
         return false; // El jugador se ha demorado, no se evalúa la respuesta
     }
 
@@ -383,6 +384,8 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
         }
         Sleep(500);
         cout << "Respuesta incorrecta. Perdiste 1 punto." << endl;
+        Sleep(500);
+        cout << "La criatura era: " << nombreCriatura << endl;
         Sleep(500);
         cout << "Puntuacion actual de " << nombreJugador << ": " << puntuacionJugador << " puntos" << endl;
         return false;
@@ -471,7 +474,7 @@ int obtenerIndiceAleatorioNoRepetido(int maximo, vector<int> &indicesUtilizados)
 }
 
 //Creacion del cronometro
-void cronometro(const string &nombreJugador, const string &nombreCriatura)
+void cronometro(const string &nombreJugador, const string &nombreCriatura, int &puntuacionJugador)
 {
     cout << "Tienes 15 segundos para responder o copiar 'terminar' para finalizar..." << endl;
     for (int i = 15; i > 0; --i)
@@ -481,11 +484,13 @@ void cronometro(const string &nombreJugador, const string &nombreCriatura)
     }
     cout << endl;
 
-    if (nombreCriatura != "")
-    {
-        Sleep(1000);
-        cout << "La criatura era: " << nombreCriatura << endl;
-        Sleep(1000);
+   cout << endl;
+
+    cout << "Te has demorado demasiado. Pierdes 1 punto." << endl;
+    cout << "La criatura era: " << nombreCriatura << endl;
+
+    if (puntuacionJugador > 0) {
+        puntuacionJugador -= 1;
     }
 }
 
@@ -552,8 +557,7 @@ void juego1()
             tolower(name1);
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
 
-            // Llamar función de cronómetro
-            cronometro(name1, nombres[indiceAleatorio]);
+    
 
             // Llamar función de adivinanza
             tolower(name1);
@@ -583,9 +587,7 @@ void juego1()
             tolower(name2);
             comprarPista(puntuacionJugador2, name2, pistas[indiceAleatorio]);
 
-            // Llamar función de cronómetro
-            cronometro(name2, nombres[indiceAleatorio]);
-
+        
             // llamar función de adivinanza
             tolower(name2);
             bool respuestaCorrectaJugador2 = adivinarCriatura(puntuacionJugador2, name2, nombres[indiceAleatorio], jugarDeNuevo);
