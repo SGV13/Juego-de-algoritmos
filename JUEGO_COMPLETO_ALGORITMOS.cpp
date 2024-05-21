@@ -576,9 +576,6 @@ void juego1()
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
 
             
-
-    
-
             // Llamar función de adivinanza
             tolower(name1);
             bool respuestaCorrectaJugador1 = adivinarCriatura(puntuacionJugador1, name1, nombres[indiceAleatorio], jugarDeNuevo);
