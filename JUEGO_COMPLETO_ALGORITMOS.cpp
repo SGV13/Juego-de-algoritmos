@@ -567,11 +567,13 @@ void juego1()
             cout << "TURNO DE " << name1 << endl;
             cout << endl;
             int indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
+            
+            Sleep(500);
+            cout << "Que criatura crees que es ---> ?  " << descripciones[indiceAleatorio] << endl;
+
             // Comprar pista Jugador 1
             tolower(name1);
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
-            Sleep(500);
-            cout << "Que criatura crees que es ---> ?  " << descripciones[indiceAleatorio] << endl;
 
             
 
@@ -598,11 +600,13 @@ void juego1()
             cout << "TURNO DE " << name2 << endl;
             cout << endl;
             indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
+            
+            Sleep(1000);
+            cout << "que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
+
             // Comprar pista Jugador 2
             tolower(name2);
             comprarPista(puntuacionJugador2, name2, pistas[indiceAleatorio]);
-            Sleep(1000);
-            cout << "que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
 
             
 
