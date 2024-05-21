@@ -165,7 +165,7 @@ void mostrarReglasYInstrucciones() {
     cout << "                        ##                                                                                                                ##" << endl;
     cout << "                        ####################################################################################################################   " << endl << endl;
     cout<<endl;
-    Sleep(7000);
+    Sleep(5000);
 
     cout << "                        COMO FUNCIONA EL JUEGO                                                                                       " << endl << endl;
     cout << "                        ####################################################################################################################   " << endl;
@@ -179,7 +179,7 @@ void mostrarReglasYInstrucciones() {
     cout << "                        ##   7: Aparecera el cronometro pero no lo que estas escribiendo, asi que no te equivoques campeon                ##" << endl;
     cout << "                        ##                                                                                                                ##" << endl;
     cout << "                        ####################################################################################################################   " << endl << endl;
-    Sleep(7000);
+    Sleep(5000);
     cout<<endl;
     
     cout << "Aceptas las condiciones?...       presione----[intro]---Si aceptas jejeje"<<endl;
@@ -409,28 +409,31 @@ bool adivinarCriatura(int &puntuacionJugador, const string &nombreJugador, const
 // funcion para el sistema de compra de pistas
 void comprarPista(int &puntuacionJugador, const string &nombreJugador, const string &pista)
 {
-    char respuesta;
-    Sleep(1000);
-    cout << endl;
-    cout << nombreJugador << ", quieres comprar una pista por 1 punto? (S/N): ";
-    cin >> respuesta;
-
-    if (respuesta == 'S' || respuesta == 's')
+    if (puntuacionJugador >= 1)
     {
-        if (puntuacionJugador >= 1)
+        char respuesta;
+        Sleep(1000);
+        cout << endl;
+        cout << nombreJugador << ", quieres comprar una pista por 1 punto? (S/N): ";
+        cin >> respuesta;
+
+        if (respuesta == 'S' || respuesta == 's')
         {
-            cout << endl;
-            cout << "Pista: " << pista << endl;
-            puntuacionJugador -= 1;
-            Sleep(1000);
-            cout << endl;
-            cout << "Has comprado una pista por 1 punto. Tu puntuacion actual es: " << puntuacionJugador << endl;
-        }
-        else
-        {
-            Sleep(1000);
-            cout << endl;
-            cout << "lo siento, necesitas 1 punto o mas para comprar una pista." << endl;
+            if (puntuacionJugador >= 1)
+            {
+                cout << endl;
+                cout << "Pista: " << pista << endl;
+                puntuacionJugador -= 1;
+                Sleep(1000);
+                cout << endl;
+                cout << "Has comprado una pista por 1 punto. Tu puntuacion actual es: " << puntuacionJugador << endl;
+            }
+            else
+            {
+                Sleep(1000);
+                cout << endl;
+                cout << "lo siento, necesitas 1 punto o mas para comprar una pista." << endl;
+            }
         }
     }
 }
@@ -564,12 +567,13 @@ void juego1()
             cout << "TURNO DE " << name1 << endl;
             cout << endl;
             int indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
-            Sleep(500);
-            cout << "Que criatura crees que es ---> ?  " << descripciones[indiceAleatorio] << endl;
-
             // Comprar pista Jugador 1
             tolower(name1);
             comprarPista(puntuacionJugador1, name1, pistas[indiceAleatorio]);
+            Sleep(500);
+            cout << "Que criatura crees que es ---> ?  " << descripciones[indiceAleatorio] << endl;
+
+            
 
     
 
@@ -594,12 +598,13 @@ void juego1()
             cout << "TURNO DE " << name2 << endl;
             cout << endl;
             indiceAleatorio = obtenerIndiceAleatorioNoRepetido(descripciones.size(), indicesUtilizados);
-            Sleep(1000);
-            cout << "que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
-
             // Comprar pista Jugador 2
             tolower(name2);
             comprarPista(puntuacionJugador2, name2, pistas[indiceAleatorio]);
+            Sleep(1000);
+            cout << "que criatura crees que es ---> " << descripciones[indiceAleatorio] << endl;
+
+            
 
         
             // llamar función de adivinanza
