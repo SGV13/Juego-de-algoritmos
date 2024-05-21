@@ -10,16 +10,34 @@
 #include <windows.h>
 #include <fstream>
 #include <algorithm>
+#include <unordered_set> // para almacenar jugadores y evitar duplicados basados en el nombre del jugador
 using namespace std;
 
 struct Jugador {
     string nombre;
     int puntuacion;
 
+    // Constructor predeterminado
     Jugador() : nombre(""), puntuacion(0) {}
 
-    Jugador(string nombre, int puntuacion) : nombre(nombre), puntuacion(puntuacion) {}
+    // Constructor con parámetros
+    Jugador(const string& nombre, int puntuacion) : nombre(nombre), puntuacion(puntuacion) {}
+
+    // Sobrecargar el operador == para comparación en unordered_set
+    bool operator==(const Jugador& otro) const {
+        return nombre == otro.nombre;
+    }
 };
+
+// Especialización de hash para usar Jugador en unordered_set
+namespace std {
+    template <>
+    struct hash<Jugador> {
+        size_t operator()(const Jugador& jugador) const {
+            return hash<string>()(jugador.nombre);
+        }
+    };
+}
 
 // Función para obtener el valor del carácter en la posición especificadaxxxxxx
 int obtenerValorCaracter(string str, int pos) {
@@ -32,76 +50,72 @@ int obtenerValorCaracter(string str, int pos) {
 
 // Función para ordenar los jugadores usando RadixSortxxxxx
 void RadixSort(vector<Jugador> &jugadores) {
-    const int SIZE = 256; // Tamaño del rango de caracteres ASCII
+    const int BASE = 10; // Base para el sistema de numeración decimal
 
-    auto contarFrecuencia = [&](int pos) {
-        vector<int> contador(SIZE, 0);
-        for (const Jugador &jugador : jugadores) {
-            int valor = obtenerValorCaracter(jugador.nombre, pos);
-            contador[valor]++;
-        }
-        return contador;
-    };
-
-    auto sumaAcumulativa = [&](const vector<int> &contador) {
-        vector<int> acumulativa(SIZE, 0);
-        acumulativa[0] = contador[0];
-        for (int i = 1; i < SIZE; i++) {
-            acumulativa[i] = acumulativa[i - 1] + contador[i];
-        }
-        return acumulativa;
-    };
-
-    auto ordenar = [&](int pos) {
-        vector<Jugador> resultado(jugadores.size());
-        vector<int> contador = contarFrecuencia(pos);
-        vector<int> acumulativa = sumaAcumulativa(contador);
-
-        for (int i = jugadores.size() - 1; i >= 0; i--) {
-            int valor = obtenerValorCaracter(jugadores[i].nombre, pos);
-            int index = acumulativa[valor] - 1;
-            resultado[index] = jugadores[i];
-            acumulativa[valor]--;
-        }
-
-        jugadores = resultado;
-    };
-
-    size_t maxLen = 0;
+    // Encontrar la puntuación máxima para determinar el número de dígitos
+    int maxPuntuacion = 0;
     for (const Jugador &jugador : jugadores) {
-        if (jugador.nombre.length() > maxLen) {
-            maxLen = jugador.nombre.length();
+        if (jugador.puntuacion > maxPuntuacion) {
+            maxPuntuacion = jugador.puntuacion;
         }
     }
 
-    for (int pos = maxLen - 1; pos >= 0; pos--) {
-        ordenar(pos);
+    // Realizar el conteo y ordenamiento por cada dígito
+    for (int exp = 1; maxPuntuacion / exp > 0; exp *= BASE) {
+        vector<Jugador> output(jugadores.size());
+        int count[BASE] = {0};
+
+        // Contar ocurrencias de los dígitos
+        for (const Jugador &jugador : jugadores) {
+            int index = (jugador.puntuacion / exp) % BASE;
+            count[index]++;
+        }
+
+        // Calcular posiciones acumuladas
+        for (int i = 1; i < BASE; i++) {
+            count[i] += count[i - 1];
+        }
+
+        // Construir el arreglo ordenado
+        for (int i = jugadores.size() - 1; i >= 0; i--) {
+            int index = (jugadores[i].puntuacion / exp) % BASE;
+            output[count[index] - 1] = jugadores[i];
+            count[index]--;
+        }
+
+        // Copiar los resultados al arreglo original
+        jugadores = output;
     }
+
+    // Invertir el vector para que quede de mayor a menor
+    reverse(jugadores.begin(), jugadores.end());
 }
 
-// Función para leer y guardar jugadores en el archivo "clasificatoria.txt" xxxx
+// Función para leer y guardar jugadores en el archivo "clasificatoria.txt"
 void guardarClasificatoria(vector<Jugador> &jugadores) {
-    vector<Jugador> todosJugadores = jugadores;
-    ifstream archivoExistente("clasificatoria.txt");
+    unordered_set<Jugador> jugadoresSet(jugadores.begin(), jugadores.end());
+    fstream archivoExistente("clasificatoria.txt");
 
     if (archivoExistente.is_open()) {
         string nombre;
         int puntuacion;
 
         while (archivoExistente >> nombre >> puntuacion) {
-            todosJugadores.emplace_back(nombre, puntuacion);
+            jugadoresSet.emplace(nombre, puntuacion);
         }
 
         archivoExistente.close();
     }
 
+    vector<Jugador> todosJugadores(jugadoresSet.begin(), jugadoresSet.end());
+
     RadixSort(todosJugadores);
 
-    ofstream archivo("clasificatoria.txt");
+    fstream archivo("clasificatoria.txt", ios::out);
 
     if (archivo.is_open()) {
         for (const Jugador &jugador : todosJugadores) {
-            archivo << "Nombre: " << jugador.nombre << ", Puntuación: " << jugador.puntuacion << endl;
+            archivo << jugador.nombre << " " << jugador.puntuacion << endl;
         }
         archivo.close();
         cout << "Clasificacion guardada en 'clasificatoria.txt'" << endl;
